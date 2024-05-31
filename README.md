@@ -1,4 +1,4 @@
-# cpp-pizza-management
+# OOP project for pizza shops managamenet
  C++ project designed for adding and managing various pizza shops. (Pizza Management System)
   
   This project was developed using basic OOP (Object-Oriented Programming) concepts:
