@@ -6,312 +6,370 @@
 
 using namespace std;
 
-class IOinterface {
+class IOinterface
+{
 public:
-    virtual istream& citire(istream& in)=0;
-    virtual ostream& afisare(ostream& out)const=0;
+    virtual istream &read(istream &in) = 0;
+    virtual ostream &write(ostream &out) const = 0;
 };
 
-class Pizzerie: public IOinterface {
+class Store : public IOinterface
+{
 protected:
     const int id;
 
-    string locatie, dataFondarii, fondator;
-    int clienti;
-    static int contor;
+    string city, foundingDate, founderName;
+    int numberOfClients;
+    static int counter;
+
 public:
-    Pizzerie(): id(contor++) {
-        this->locatie = "anonim";
-        this->dataFondarii = "00/00/0000";
-        this->fondator = "anonim";
-        this->clienti = 0;
+    Store() : id(counter++)
+    {
+        this->city = "anonim";
+        this->foundingDate = "00/00/0000";
+        this->founderName = "anonim";
+        this->numberOfClients = 0;
     }
 
-    Pizzerie(string locatie, string dataFondarii, string fondator, int clienti): id(contor++) {
-        this->locatie = locatie;
-        this->dataFondarii = dataFondarii;
-        this->fondator = fondator;
-        this->clienti = clienti;
+    Store(string city, string foundingDate, string founderName, int numberOfClients) : id(counter++)
+    {
+        this->city = city;
+        this->foundingDate = foundingDate;
+        this->founderName = founderName;
+        this->numberOfClients = numberOfClients;
     }
 
-    Pizzerie(const Pizzerie& p): id(p.contor) {
-        this->locatie = p.locatie;
-        this->dataFondarii = p.dataFondarii;
-        this->fondator = p.fondator;
-        this->clienti = p.clienti;
+    Store(const Store &p) : id(p.counter)
+    {
+        this->city = p.city;
+        this->foundingDate = p.foundingDate;
+        this->founderName = p.founderName;
+        this->numberOfClients = p.numberOfClients;
     }
 
-    Pizzerie& operator = (const Pizzerie& p) {
-        if(this != &p) {
-            this->locatie = p.locatie;
-            this->dataFondarii = p.dataFondarii;
-            this->fondator = p.fondator;
-            this->clienti = p.clienti;
+    Store &operator=(const Store &p)
+    {
+        if (this != &p)
+        {
+            this->city = p.city;
+            this->foundingDate = p.foundingDate;
+            this->founderName = p.founderName;
+            this->numberOfClients = p.numberOfClients;
         }
         return *this;
     }
 
-    istream& citire(istream& in) {
-        cout << "Introdu locatia:\n";
-        in >> this->locatie;
-        cout << "Introdu data fondarii:\n";
-        in >> this->dataFondarii;
-        cout << "Introdu numele fondatorului:\n";
-        in >> this->fondator;
-        cout << "Introdu cati clienti are in medie aceasta pizzerie pe zi:\n";
-        in >> this->clienti;
+    istream &read(istream &in)
+    {
+        cout << "City:\n";
+        in >> this->city;
+        cout << "Founding date:\n";
+        in >> this->foundingDate;
+        cout << "Founder name:\n";
+        in >> this->founderName;
+        cout << "Number of clients:\n";
+        in >> this->numberOfClients;
         return in;
     }
 
-    friend istream& operator >> (istream& in, Pizzerie& p) {
-        return p.citire(in);
+    friend istream &operator>>(istream &in, Store &p)
+    {
+        return p.read(in);
     }
 
-    ostream& afisare(ostream& out)const {
-        out << "Locatie: " << this->locatie << endl;
-        out << "Data fondarii: " << this->dataFondarii << endl;
-        out << "Fondator: " << this->fondator << endl;
-        out << "Clienti: " << this->clienti << endl;
+    ostream &write(ostream &out) const
+    {
+        out << "City: " << this->city << endl;
+        out << "Founding date: " << this->foundingDate << endl;
+        out << "Founder Name: " << this->founderName << endl;
+        out << "Number Of Clients: " << this->numberOfClients << endl;
         return out;
     }
 
-    friend ostream& operator << (ostream& out, const Pizzerie& p) {
-        return p.afisare(out);
+    friend ostream &operator<<(ostream &out, const Store &p)
+    {
+        return p.write(out);
     }
 
-    const int getId() {
+    const int getId()
+    {
         return this->id;
     }
 
-    virtual void setFondator(string fondator) {
-        this->fondator = fondator;
+    virtual void setfounderName(string founderName)
+    {
+        this->founderName = founderName;
     }
 
-    int getClienti() {
-        return this->clienti;
+    int getNumberOfClients()
+    {
+        return this->numberOfClients;
     }
 
-    string getLocatie() {
-        return this->locatie;
+    string getCity()
+    {
+        return this->city;
     }
 
-    int getNrOspatari() {}
-
-    string getFondator() {
-        return this->fondator;
+    virtual int getNumberOfVeganProducts() {
+        return 0;
     }
 
-    ~Pizzerie() {}
+    string getFounderName()
+    {
+        return this->founderName;
+    }
+
+    ~Store() {}
 };
-int Pizzerie::contor = 0;
+int Store::counter = 0;
 
-class PizzerieTerasa: public Pizzerie {
+class VeganStore : public Store
+{
 protected:
-    int nrOspatari;
+    int numberOfVeganProducts;
+
 public:
-    PizzerieTerasa(): Pizzerie() {
-        this->nrOspatari = 0;
+    VeganStore() : Store()
+    {
+        this->numberOfVeganProducts = 0;
     }
 
-    PizzerieTerasa(string locatie, string dataFondarii, string fondator, int clienti, int nrOspatari): Pizzerie(locatie, dataFondarii, fondator, clienti) {
-        this->nrOspatari = nrOspatari;
+    VeganStore(string city, string foundingDate, string founderName, int numberOfClients, int numberOfVeganProducts) : Store(city, foundingDate, founderName, numberOfClients)
+    {
+        this->numberOfVeganProducts = numberOfVeganProducts;
     }
 
-    PizzerieTerasa(const PizzerieTerasa& p): Pizzerie(p) {
-        this->nrOspatari = p.nrOspatari;
+    VeganStore(const VeganStore &p) : Store(p)
+    {
+        this->numberOfVeganProducts = p.numberOfVeganProducts;
     }
 
-    PizzerieTerasa& operator = (const PizzerieTerasa& p) {
-        if(this != &p) {
-            Pizzerie::operator=(p);
-            this->nrOspatari = p.nrOspatari;
+    VeganStore &operator=(const VeganStore &p)
+    {
+        if (this != &p)
+        {
+            Store::operator=(p);
+            this->numberOfVeganProducts = p.numberOfVeganProducts;
         }
         return *this;
     }
 
-    istream& citire(istream& in) {
-        Pizzerie::citire(in);
-        cout << "Introdu cati ospatari sunt:\n";
-        in >> this->nrOspatari;
+    istream &read(istream &in)
+    {
+        Store::read(in);
+        cout << "Number of vegan products:\n";
+        in >> this->numberOfVeganProducts;
         return in;
     }
 
-    ostream& afisare(ostream& out)const {
-        Pizzerie::afisare(out);
-        out << "Numar ospatari: " << this->nrOspatari << endl;
+    ostream &write(ostream &out) const
+    {
+        Store::write(out);
+        out << "Number of vegan products: " << this->numberOfVeganProducts << endl;
         return out;
     }
 
-    int getNrOspatari() {
-        return this->nrOspatari;
+    int getNumberOfVeganProducts()
+    {
+        return this->numberOfVeganProducts;
     }
-
 };
 
-class PizzerieFull: public PizzerieTerasa {
+class OnlineVeganStore : public VeganStore
+{
 private:
-    int nrLivratori;
+    int deliveryRadius;
+
 public:
-   PizzerieFull(): PizzerieTerasa() {
-       this->nrLivratori = 0;
-   }
-
-   PizzerieFull(string locatie, string dataFondarii, string fondator, int clienti, int capacitate, int nrLivratori): PizzerieTerasa(locatie, dataFondarii, fondator, clienti, capacitate) {
-       this->nrLivratori = nrLivratori;
-   }
-
-   PizzerieFull(const PizzerieFull& p): PizzerieTerasa(p) {
-       this->nrLivratori = p.nrLivratori;
+    OnlineVeganStore() : VeganStore()
+    {
+        this->deliveryRadius = 0;
     }
 
-   PizzerieFull& operator = (const PizzerieFull& p) {
-       if(this != &p) {
-            PizzerieTerasa::operator=(p);
-            this->nrLivratori = p.nrLivratori;
-       }
-       return *this;
-   }
+    OnlineVeganStore(string city, string foundingDate, string founderName, int numberOfClients, int capacitate, int deliveryRadius) : VeganStore(city, foundingDate, founderName, numberOfClients, capacitate)
+    {
+        this->deliveryRadius = deliveryRadius;
+    }
 
-   istream& citire(istream& in) {
-       PizzerieTerasa::citire(in);
-       cout << "Introdu cati livratori sunt:\n";
-       in >> this->nrLivratori;
-       return in;
-   }
+    OnlineVeganStore(const OnlineVeganStore &p) : VeganStore(p)
+    {
+        this->deliveryRadius = p.deliveryRadius;
+    }
 
-  ostream& afisare(ostream& out)const {
-      PizzerieTerasa::afisare(out);
-      out << "Numar livratori: " << this->nrLivratori << endl;
-  }
+    OnlineVeganStore &operator=(const OnlineVeganStore &p)
+    {
+        if (this != &p)
+        {
+            VeganStore::operator=(p);
+            this->deliveryRadius = p.deliveryRadius;
+        }
+        return *this;
+    }
+
+    istream &read(istream &in)
+    {
+        VeganStore::read(in);
+        cout << "Delivery radius:\n";
+        in >> this->deliveryRadius;
+        return in;
+    }
+
+    ostream &write(ostream &out) const
+    {
+        VeganStore::write(out);
+        out << "Delivery radius: " << this->deliveryRadius << endl;
+        return out;
+    }
 };
 
 template <class T>
-float profit(T pizzerie) {
-        return 30 * (pizzerie.getClienti() * 40 - 0.03 * pizzerie.getClienti() * 40 * pizzerie.getNrOspatari());
+float calculateStoreProfit(T store)
+{
+    return 30 * (store.getNumberOfClients() * 40 - 0.03 * store.getNumberOfClients() * 40 * store.getNumberOfVeganProducts());
 }
 
 template <class T1, class T2>
-void compara(T1 pizzerie1, T2 pizzerie2) {
-    if(profit(pizzerie1) > profit(pizzerie2))
-        cout << "Prima pizzerie are profitul mai mare.\n";
-    else if(profit(pizzerie1) < profit(pizzerie2))
-        cout << "A doua pizzerie are profitul mai mare.\n";
+void compareStoreProfit(T1 store1, T2 store2)
+{
+    if (calculateStoreProfit(store1) > calculateStoreProfit(store2))
+        cout << "The first grocery store has a higher profit.\n";
+    else if (calculateStoreProfit(store1) < calculateStoreProfit(store2))
+        cout << "The second grocery store has a higher profit.\n";
     else
-        cout << "Cele 2 pizzerii au profitul egal.\n";
+        cout << "Both grocery stores have the same profit.\n";
 }
 
-template<typename key, typename value>
-ostream &operator<<(ostream &stream, const map<key, value> &myMap) {
-    for(const pair<key, value >&t:myMap) {
-        stream << t.first<< " " << t.second<< " "<<endl;
+template <typename key, typename value>
+ostream &operator<<(ostream &stream, const map<key, value> &myMap)
+{
+    for (const pair<key, value> &t : myMap)
+    {
+        stream << t.first << " " << t.second << " " << endl;
     }
     return stream;
 }
 
-class Meniu {
+class displayMenu
+{
 private:
-    static Meniu *ob;
+    static displayMenu *ob;
+
 public:
-    static Meniu* getInstance(){
-        if(!ob)
-            ob = new Meniu();
+    static displayMenu *getInstance()
+    {
+        if (!ob)
+            ob = new displayMenu();
         return ob;
     }
 
-    void start(){
-        vector<Pizzerie*> vectorPizzerii;
-        list<string> listaFondatori;
-        set<string> setOrase;
-        set<int> setClienti;
-        map<string, int> mapaOraseSiClienti;
+    void start()
+    {
+        vector<Store *> storeVector;
+        list<string> founderNameList;
+        set<string> citySet;
+        set<int> numberOfClientsSet;
+        map<string, int> citiesAndNumberOfClientsMap;
         int i = 1;
-        while(i == 1) {
-            cout << "\t0 - Inchide aplicatia\n";
-            cout << "\t1 - Adauga o pizzerie doar cu terasa\n";
-            cout << "\t2 - Adauga o pizzerie si cu terasa si cu livrare\n";
-            cout << "\t3 - Afiseaza toate pizzeriile\n";
-            cout << "\t4 - Afiseaza profitul mediu al unei pizzerii intr-o luna\n";
-            cout << "\t5 - Compara profitul a 2 pizzerii\n";
-            cout << "\t6 - Afiseaza toti fondatorii\n";
-            cout << "\t7 - Afiseaza toate orasele in care exista pizzerii\n";
-            cout << "\t8 - Afiseaza cati clienti sunt in fiecare oras\n";
+        while (i == 1)
+        {
+            cout << "\t0 - Exit\n";
+            cout << "\t1 - Add a vegan store\n";
+            cout << "\t2 - Add an online vegan store\n";
+            cout << "\t3 - Display all store\n";
+            cout << "\t4 - Display the average profit of a store in a month\n";
+            cout << "\t5 - Compare 2 stores\n";
+            cout << "\t6 - Display all the founders\n";
+            cout << "\t7 - Display all the cities where there are stores\n";
+            cout << "\t8 - Display the number of clients from every city\n";
 
             int a;
             cin >> a;
-            switch(a){
-                case 0: {
-                    i = 0;
-                    break;
-                }
-                case 1: {
-                    PizzerieTerasa p;
-                    cin >> p;
-                    vectorPizzerii.push_back(new PizzerieTerasa(p));
-                    listaFondatori.push_back(p.getFondator());
-                    setOrase.insert(p.getLocatie());
-                    mapaOraseSiClienti[p.getLocatie()] = p.getClienti();
-                    break;
-                }
-                case 2: {
-                    PizzerieFull p;
-                    cin >> p;
-                    vectorPizzerii.push_back(new PizzerieFull(p));
-                    listaFondatori.push_back(p.getFondator());
-                    setOrase.insert(p.getLocatie());
-                    setClienti.insert(p.getClienti());
-                    mapaOraseSiClienti[p.getLocatie()] = p.getClienti();
-                    break;
-                }
-                case 3: {
-                    vector<Pizzerie*>::iterator it;
-                    for(it = vectorPizzerii.begin(); it != vectorPizzerii.end(); it++)
-                        cout << (**it).getId() << ". " << **it << endl;
-                    break;
-                }
-                case 4: {
-                    vector<Pizzerie*>::iterator it;
-                    for(it = vectorPizzerii.begin(); it != vectorPizzerii.end(); it++)
-                        cout << (**it).getId() << ". " << **it << endl;
-                    cout << "Introdu numarul pizzeriei la care vrei sa vezi profitul:\n";
-                    int nr;
-                    cin >> nr;
-                    cout << "Profitul pizzeriei cu numarul " << nr << " este " << profit(*vectorPizzerii[nr-1]) << " lei." << endl << endl;
-                    break;
-                }
-                case 5: {
-                    vector<Pizzerie*>::iterator it;
-                    for(it = vectorPizzerii.begin(); it != vectorPizzerii.end(); it++)
-                        cout << (**it).getId() << ". " << **it << endl;
-                    cout << "Introdu numerele pizzeriilor pe care vrei sa le compari:\n";
-                    int nr1, nr2;
-                    cin >> nr1 >> nr2;
-                    compara(*vectorPizzerii[nr1-1], *vectorPizzerii[nr2-1]);
-                    break;
-                }
-                case 6: {
-                    list<string>::iterator it;
-                    for(it = listaFondatori.begin(); it != listaFondatori.end(); it++)
-                        cout << *it << endl;
-                    break;
-                }
-                case 7: {
-                    for(auto it=setOrase.begin(); it!= setOrase.end(); it++)
-                        cout << *it << endl;
-                    break;
-                }
-                case 8: {
-                    cout<<mapaOraseSiClienti;
-                    break;
-                }
+            switch (a)
+            {
+            case 0:
+            {
+                i = 0;
+                break;
+            }
+            case 1:
+            {
+                VeganStore p;
+                cin >> p;
+                storeVector.push_back(new VeganStore(p));
+                founderNameList.push_back(p.getFounderName());
+                citySet.insert(p.getCity());
+                citiesAndNumberOfClientsMap[p.getCity()] = p.getNumberOfClients();
+                break;
+            }
+            case 2:
+            {
+                OnlineVeganStore p;
+                cin >> p;
+                storeVector.push_back(new OnlineVeganStore(p));
+                founderNameList.push_back(p.getFounderName());
+                citySet.insert(p.getCity());
+                numberOfClientsSet.insert(p.getNumberOfClients());
+                citiesAndNumberOfClientsMap[p.getCity()] = p.getNumberOfClients();
+                break;
+            }
+            case 3:
+            {
+                vector<Store *>::iterator it;
+                for (it = storeVector.begin(); it != storeVector.end(); it++)
+                    cout << (**it).getId() << ". " << **it << endl;
+                break;
+            }
+            case 4:
+            {
+                vector<Store *>::iterator it;
+                for (it = storeVector.begin(); it != storeVector.end(); it++)
+                    cout << (**it).getId() << ". " << **it << endl;
+                cout << "Enter a shop number to view its profit:\n";
+                int nr;
+                cin >> nr;
+                cout << "Shop " << nr << " has a profit of " << calculateStoreProfit(*storeVector[nr - 1]) << "$." << endl
+                     << endl;
+                break;
+            }
+            case 5:
+            {
+                vector<Store *>::iterator it;
+                for (it = storeVector.begin(); it != storeVector.end(); it++)
+                    cout << (**it).getId() << ". " << **it << endl;
+                cout << "Enter the numbers of the two shops you want to compare:\n";
+                int nr1, nr2;
+                cin >> nr1 >> nr2;
+                compareStoreProfit(*storeVector[nr1 - 1], *storeVector[nr2 - 1]);
+                break;
+            }
+            case 6:
+            {
+                list<string>::iterator it;
+                for (it = founderNameList.begin(); it != founderNameList.end(); it++)
+                    cout << *it << endl;
+                break;
+            }
+            case 7:
+            {
+                for (auto it = citySet.begin(); it != citySet.end(); it++)
+                    cout << *it << endl;
+                break;
+            }
+            case 8:
+            {
+                cout << citiesAndNumberOfClientsMap;
+                break;
+            }
             }
         }
     }
 };
-Meniu* Meniu::ob=0;
+displayMenu *displayMenu::ob = 0;
 
 int main()
 {
-    Meniu* menu = menu->getInstance();
+    displayMenu *menu = menu->getInstance();
     menu->start();
     return 0;
 }
